@@ -3,7 +3,13 @@
 * <font size=3> 支持多标的、做空、自定义数据，策略统计分析，图形展示等特性。</font>      
 
 ---
-# 1. 使用说明
+# 1.中证500策略
+* 详细策略见[中证500指数策略](https://github.com/feelbad/wlkbacktest/blob/master/%E4%B8%AD%E8%AF%81500.ipynb)
+
+---
+
+
+# 2. 使用说明
 * <font size=3> 用户需定义init, algo两个函数，来初始化策略的环境配置和具体的算法逻辑。</font>    
 * <font size=3> init函数中的context参数为Context类对象，用户添加context对象的属性值，来初始化策略的基本信息。例如初始资金、订阅标的名、滑点设置。</font>       
 * <font size=3> algo函数为策略的算法逻辑，data为订阅标的的历史交易数据，broker为账户对象，可完成下单，标的持仓等事宜，context与init中的为同一对象。</font>      
@@ -53,10 +59,10 @@ def algo(data,broker,context):
                 context.state = None
                 context.holding = False
 ```
-* <font size=3> 详细策略见[中证500指数策略](http://dataelixir.com/issues/55#start) </font>    
+  
 
 ---
-# 2. 文档说明
+# 3. 文档说明
 
 ### context.py
 * <font size=3> 策略的环境变量类，用户在init函数中定义其对象属性值，供Strategy类对象使用 </font>  
