@@ -89,9 +89,17 @@ def init(context,**kwargs):
   context.securities = ['zz500']
   context.start = '20130101'
   context.end = '20130101'
+  
+  context.sec = 'zz500'
 
 def algo(data,broker,context):
+    df = data[context.sec] #获取中证500标的数据
+    now = broker.now
     #策略逻辑
+    
+    if df.at[now,'close'] < df['close'].ix[-10:].mean():
+        broker.order_percent(context.sec,1,'long')
+    
 
 strategy = Strategy(init) # 初始化策略，传入init函数
 strategy.run_backtest(algo) # 执行策略算法
@@ -103,9 +111,70 @@ strategy.show_trade_information() #展示开平仓点位
 ---
 
 ### Broker.py
-* <font size=3> 交易账户类：提供下单函数功能；记录每日所有标的持仓量、持仓成本、市值信息；记录历史每笔成交记录；未平仓记录  </font>  
-* <font size=3>   </font>  
-* <font size=3> datahandler提供的数据格式为pandas.Panel，该数据结构类似dict，key为标的名称，value为一个pandas.DataFrame</font>  
-* **默认本地数据文件用csv保存，文件名即为证券代码名，如600010.sh.csv,300003.sz.csv,zz500.csv**  
-* **默认csv文件内容：列名：date,open,high,low,close,volume,amount。第二行起为数据内容**  
-* **默认本地数据文件存储路径为 D:/Data/Daily/xxxx.csv , D:/Data/Minute/X（数字）/xxxx.csv; 日度、分钟数据分开存储**   
+* <font size=3> 交易账户类：提供下单功能、市值查询等功能；记录持仓信息,成交记录信息,账户净值信息  </font>  
+* <font size=3> 每次algo调用完后，更新最新的持仓信息，账户净值、现金余额等信息</font>  
+* <font size=3> 提供各类辅助查询等支持函数，供algo函数中的broker对象调用,包括：  </font>  
+```python
+#   可在algo函数中调用
+
+# 查找某标的的最新持仓量
+def curr_sec_hold_volume(self, sec):
+    '''
+    param sec: 标的名
+    '''
+    
+# 查找某标的最新持仓市值序列,截止前一交易日
+def curr_sec_hold_value(self, sec):
+    '''
+    param sec: 标的名
+    '''
+
+# 查找标的的多空方向
+def curr_sec_direction(self, sec):
+    '''
+    param sec: 标的名
+    '''
+
+# 查找最近n个交易期某标的持仓市值的最大回撤
+def curr_sec_latest_drawdown(self, sec, n):
+    '''
+    param sec: 标的名
+    param n: 往前n个bar期
+    '''
+
+# 返回有仓位的标的数量
+def curr_hold_nums(self):
+
+# 查找最近n个交易期总持仓市值的最大回撤
+def curr_latest_drawdown(self, n):
+    '''
+    param sec: 标的名
+    param n: 往前n个bar期
+    '''
+
+# 查找账户的最新总持仓市值序列,截止上一交易日
+def curr_hold_value(self):
+
+# 查找账户的最新净值序列,截止上一交易日
+def curr_portfolio(self):
+
+########## 账户下单函数
+# 按量（手）下单
+def order_share(self, security, order_price, shares, long_short='long', real_price=False):
+    '''
+    security: str; 标的名称
+    order_price: float or int;下单价格
+    shares: int; 正数为开仓,负数为平仓
+    long_short:str; 'long','short'
+    real_price: bool; 是否为按滑点更新后的成交价
+    '''
+
+# 按比例下单
+def order_percent(self, security, order_price, percent, long_short='long'):
+    '''
+    security: str; 标的名称
+    order_price: float or int; 下单价格
+    percent: float; 正数为开仓，代表所占的剩余现金的比例；负数为平仓，代表持仓市值的比例
+    long_short:str; 'long','short'
+    '''
+```
