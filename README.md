@@ -111,6 +111,7 @@ def show_equity_curve(self, benchmark=None, standardize=True):
 def show_trade_information(self):
 
 ```
+
 * <font size=3> 使用示例:   </font>  
 
 ```python
@@ -132,7 +133,10 @@ strategy.show_equity_curve() # 画出净值曲线
 strategy.show_trade_information() #展示开平仓点位
 
 ```
+
+
 ---
+
 
 ### Broker.py
 * <font size=3> 交易账户类：提供下单功能、市值查询等功能；记录持仓信息,成交记录信息,账户净值信息  </font>  
@@ -208,8 +212,9 @@ def order_percent(self, security, order_price, percent, long_short='long'):
     long_short:str; 'long','short'
     '''
 ```  
+
 * <font size=3> 提供给Strategy类回测结果，函数包括：  </font>
-'''python
+```python
 #####################################################################
 # 回测结束后供strategy类调用
 
@@ -224,7 +229,7 @@ def get_trade_record(self):
 
 # 获取每笔交易盈亏信息
 def get_trade_pl(self):
-'''
+```
 
 ### analyzer.py
 * <font size=3> 回测结果分析模块 </font>  
