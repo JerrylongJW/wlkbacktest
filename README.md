@@ -53,7 +53,7 @@ def algo(data,broker,context):
                 context.state = None
                 context.holding = False
 ```
-* <font size=3> 可参考策略demo.ipynb[]</font>    
+* <font size=3> 详细策略见[中证500指数策略](http://dataelixir.com/issues/55#start) </font>    
 
 ---
 # 2. 文档说明
@@ -236,3 +236,10 @@ def get_trade_pl(self):
 * <font size=3> 回测结果分析模块 </font>  
 * <font size=3> 提供完整的回测统计信息，包括 夏普、年化收益、波动率、最大回撤、盈亏比、胜率等常见信息</font>   
 * <font size=3> analysis函数以pandas.DataFrame格式返回结果给Strategy调用 </font>   
+
+---
+
+### plotting.py
+* <font size=3> 展示结果类 </font>  
+* <font size=3> plot_equity_curve 函数提供净值曲线图</font>   
+* <font size=3> plot_all 函数画出策略中的各个标的的开平仓点位，及持仓净值走势图 </font>   
