@@ -34,7 +34,7 @@ def algo(data,broker,context):
     y_close = df['close'][-2] #上跟bar的收盘价
     #策略逻辑
     
-    if not context.holding:
+    if not context.holding and now < context.end:
         if t_close > 1.02 * y_close:
             if broker.order_percent(context.sec,t_close,1,'long'): #多开
                 context.state = 'long'
@@ -186,11 +186,17 @@ def curr_portfolio(self):
 # 按量（手）下单
 def order_share(self, security, order_price, shares, long_short='long', real_price=False):
     '''
+    param
+    -----
     security: str; 标的名称
     order_price: float or int;下单价格
     shares: int; 正数为开仓,负数为平仓
     long_short:str; 'long','short'
     real_price: bool; 是否为按滑点更新后的成交价
+
+    return
+    ----
+    True：成交;False:失败 
     '''
 
 # 按比例下单
@@ -201,4 +207,26 @@ def order_percent(self, security, order_price, percent, long_short='long'):
     percent: float; 正数为开仓，代表所占的剩余现金的比例；负数为平仓，代表持仓市值的比例
     long_short:str; 'long','short'
     '''
-```
+```  
+* <font size=3> 提供给Strategy类回测结果，函数包括：  </font>
+'''python
+#####################################################################
+# 回测结束后供strategy类调用
+
+# 获取净值序列
+def get_equity_curve(self):
+
+# 获取每个交易日持仓明细
+def get_daily_balance(self):
+
+# 获取成交记录
+def get_trade_record(self):
+
+# 获取每笔交易盈亏信息
+def get_trade_pl(self):
+'''
+
+### analyzer.py
+* <font size=3> 回测结果分析模块 </font>  
+* <font size=3> 提供完整的回测统计信息，包括 夏普、年化收益、波动率、最大回撤、盈亏比、胜率等常见信息</font>   
+* <font size=3> analysis函数以pandas.DataFrame格式返回结果给Strategy调用 </font>   
