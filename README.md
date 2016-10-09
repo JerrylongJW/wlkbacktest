@@ -28,7 +28,7 @@ def algo(data,broker,context,**kwargs):
 
 ---
 # 文档说明
-
+--
 ### context.py
 * <font size=3> 策略的环境变量类，用户在init函数中定义其对象属性值，供Strategy类对象使用 </font>  
 * <font size=3> 可定义对象包括:   </font>    
@@ -36,38 +36,67 @@ def algo(data,broker,context,**kwargs):
 &nbsp;&nbsp;context.slippage : 交易滑点  
 &nbsp;&nbsp;context.commission : 交易佣金  
 &nbsp;&nbsp;context.minute : 策略所采用的数据频次    
-&nbsp;&nbsp;context.securities : 订阅标的列表（必须）    格式:['zz500'],['600010.sh','300001.SZ']  
-&nbsp;&nbsp;context.start : 策略起始时间（必须)          格式:'2013-1-1','20130101','2013-01-01'     
-&nbsp;&nbsp;context.end : 策略结束时间（必须）           格式:'2013-1-1','20130101','2013-01-01'      
-* <font size=3> 用户可自行为context添加额外属性变量，方便在algo函数中使用   
+&nbsp;&nbsp;context.securities : 订阅标的列表（必须）    格式:['zz500'], ['600010.sh', '300001.SZ']  
+&nbsp;&nbsp;context.start : 策略起始时间（必须)          格式:'2013-1-1', '20130101', '2013-01-01'     
+&nbsp;&nbsp;context.end : 策略结束时间（必须）           格式:'2013-1-1', '20130101', '2013-01-01'      
+* <font size=3> 用户可自行为context添加额外属性变量，方便在algo函数中使用
 
+--
 
 ### datahandler.py
 * <font size=3> 数据获取类，提供策略所需要的标的历史交易数据，供Strategy类对象使用  </font>  
 * <font size=3> 通过context中的 securities，start，end，minute 4个属性值，从本地获取策略所需要的交易数据  </font>
 * <font size=3> ***框架默认本地数据文件用csv保存，文件名即为证券代码名，如600010.sh.csv,300003.sz.csv,zz500.csv***  </font>
 * <font size=3> ***框架默认csv文件内容：列名：date,open,high,low,close,volume,amount。第二行起为数据内容*** </font>
-* <font size=3> ***框架默认本地数据文件存储路径为 ./Data/Daily/xxxx.csv ./Data/Minute/X（数字）/xxxx.csv;日数据、分钟数据分开存储*** </font>
+* <font size=3> ***框架默认本地数据文件存储路径为 ./Data/Daily/xxxx.csv ./Data/Minute/X（数字）/xxxx.csv;日数据、分钟数据分开存储*** </font>   
+* <font size=3> datahandler提供的数据格式为pandas.Panel，该数据结构类似dict，key为标的名称，value为一个pandas.DataFrame</font>  
 
 
+--
 
 ###  strategy.py
 * <font size=3> 策略类:装载交易数据，获取策略环境变量，执行交易逻辑，分析回测结果，展示回测信息) </font>  
-* <font size=3> 使用示例：   </font>
+* <font size=3> 可调用函数:   </font>  
+
+```python
+# 执行算法回测，传入用户编写的algo函数
+def run_backtest(self, algo, **kwargs):
+    
+# 返回策略所需的交易数据
+def get_trading_data(self):
+
+# 返回策略的环境变量对象
+def get_context(self):
+
+# 获取回测结果，包含净值曲线、每交易日持仓信息、每笔平仓收益信息、所有开平仓记录（执行完 run_backtest 后调用）
+def backtest_result(self):
+
+# 获取策略的回测统计信息（执行完 run_backtest 后调用）
+def backtest_analysis(self):
+
+# 画出策略的净值曲线图
+def show_equity_curve(self, benchmark=None, standardize=True):
+
+# 画出策略里各标的开仓点位及持仓市值信息
+def show_trade_information(self):
+
+```
+---
+
 ```python
 def init(context,**kwargs):
   context.securities = ['zz500']
   context.start = '20130101'
   context.end = '20130101'
 
+def algo(data,broker,context):
+    #策略逻辑
+
+strategy = Strategy(init) #初始化策略，传入init函数
+strategy.run_backtest(algo) #执行策略算法
+df = strategy.backtest_analysis() #获取策略回测统计信息
+ = strategy.backtest_analysis()
+
 ```
+--
 
-
-&nbsp;&nbsp;context.cash : 账户资金  
-&nbsp;&nbsp;context.slippage : 交易滑点  
-&nbsp;&nbsp;context.commission : 交易佣金  
-&nbsp;&nbsp;context.minute : 策略所采用的数据频次    
-&nbsp;&nbsp;context.securities : 订阅标的列表（必须）    格式:['zz500'],['600010.sh','300001.SZ']  
-&nbsp;&nbsp;context.start : 策略起始时间（必须)          格式:'2013-1-1','20130101','2013-01-01'     
-&nbsp;&nbsp;context.end : 策略结束时间（必须）           格式:'2013-1-1','20130101','2013-01-01'      
-* <font size=3> 用户可自行为context添加额外属性变量，方便在algo函数中使用   
