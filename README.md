@@ -21,8 +21,13 @@ def init(context,**kwargs):
     context.securities = ['zz500']         # 订阅标的
 
 # 策略交易逻辑函数
-def algo(data,broker,context,**kwargs):
-    pass
+def algo(data,broker,context):
+    df = data[context.sec] #获取中证500标的数据
+    now = broker.now
+    #策略逻辑
+    
+    if df.at[now,'close'] < df['close'].ix[-10:].mean():
+        broker.order_percent(context.sec,1,'long')
 ```
 * <font size=3> 可参考策略demo.ipynb[]</font>    
 
@@ -93,12 +98,7 @@ def init(context,**kwargs):
   context.sec = 'zz500'
 
 def algo(data,broker,context):
-    df = data[context.sec] #获取中证500标的数据
-    now = broker.now
     #策略逻辑
-    
-    if df.at[now,'close'] < df['close'].ix[-10:].mean():
-        broker.order_percent(context.sec,1,'long')
     
 
 strategy = Strategy(init) # 初始化策略，传入init函数
