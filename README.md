@@ -230,6 +230,7 @@ def get_trade_record(self):
 # 获取每笔交易盈亏信息
 def get_trade_pl(self):
 ```
+---
 
 ### analyzer.py
 * <font size=3> 回测结果分析模块 </font>  
