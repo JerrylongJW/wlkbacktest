@@ -18,9 +18,10 @@ def init(context,**kwargs):
     context.cash = 10000000                # 策略资金
     context.minute = 1                     # 回测采用1分钟数据
     context.slippage = 0.2                 # 交易滑点
-    context.commision = 0.02               # 万二
+    context.commision = 0.02               # 手续费万二
     context.securities = ['zz500']         # 订阅标的
     
+    context.sec = 'zz500'
     context.holding = False #是否持有
     context.state = None #多空状态
 
