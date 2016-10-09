@@ -300,11 +300,18 @@ class Broker(object):
     # 按量（手）下单
     def order_share(self, security, order_price, shares, long_short='long', real_price=False):
         '''
+        param
+        -----
         security: str; 标的名称
         order_price: float or int;下单价格
         shares: int; 正数为开仓,负数为平仓
         long_short:str; 'long','short'
         real_price: bool; 是否为按滑点更新后的成交价
+
+        return
+        ----
+        True：成交
+        False:失败 
         '''
         assert(shares != 0)
         assert(long_short in ['long', 'short'])
@@ -316,7 +323,7 @@ class Broker(object):
             price = self._real_excute_price(order_price, direction, long_short)
 
         if not self._valid_order(security, price, shares, long_short):  # 订单是否有效
-            return
+            return False
 
         # 开仓
         if direction == 'open':
@@ -329,6 +336,7 @@ class Broker(object):
 
         # 记录该笔交易
         self._record_trade(security, price, shares, direction, long_short)
+        return True
 
     # 按比例下单
     def order_percent(self, security, order_price, percent, long_short='long'):

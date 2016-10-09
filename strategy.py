@@ -34,15 +34,14 @@ class Strategy(object):
         # 初始化账户基本信息
         self._broker = Broker(self._data, self._context)
 
-# 执行回测
-
+    # 执行回测
     def run_backtest(self, algo, **kwargs):
         '''
         param algo: function，策略逻辑,用户自定义
         '''
         # #记录策略耗时
-        # import time
-        # t0 = time.time()
+        import time
+        t0 = time.time()
 
         # 回测时间戳
         ts_idx = self._data.major_axis  # panel index
@@ -68,16 +67,33 @@ class Strategy(object):
                 # 更新每日的持仓市值信息
                 self._broker.update_broker(t)
 
-        # t1 = time.time()
-        # print('the strategy backtesing consuming %f seconds' % (t1 - t0))
+        t1 = time.time()
+        print('the strategy backtesing consuming %f seconds' % (t1 - t0))
 
+    # 获取交易数据
     def get_trading_data(self):
+        '''
+        return 返回策略所需的交易数据
+        '''
         return self._data
 
+    # 获取环境变量
     def get_context(self):
+        '''
+        return 返回策略的环境变量对象
+        '''
         return self._context
 
+    # 获取回测结果
     def backtest_result(self):
+        '''
+        return
+        -------
+        pl : 策略的净值曲线
+        dbal : 策略的每交易日持仓信息
+        tpl : 每笔交易平仓后的收益信息
+        tlog : 所有的开平仓记录
+        '''
         pl = self._broker.get_equity_curve()
         dbal = self._broker.get_daily_balance()
         tpl = self._broker.get_trade_pl()
@@ -85,10 +101,16 @@ class Strategy(object):
         return pl, dbal, tpl, tlog
 
     def backtest_analysis(self):
+        '''
+        return
+        -------
+        result : pandas.DataFrame ;策略的回测结果统计信息
+        '''
         pl = self._broker.get_equity_curve()
         dbal = self._broker.get_daily_balance()
         tpl = self._broker.get_trade_pl()
-        return analysis(pl, dbal, self._context.cash, tpl)
+        result = analysis(pl, dbal, self._context.cash, tpl)
+        return result
 
     # 画出策略的净值曲线图
     def show_equity_curve(self, benchmark=None, standardize=True):
