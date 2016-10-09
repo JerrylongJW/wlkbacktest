@@ -36,16 +36,22 @@ def algo(data,broker,context):
     
     if not context.holding:
         if t_close > 1.02 * y_close:
-            broker.order_percent(context.sec,t_close,1,'long') #多开
-            context.state = 'long'
+            if broker.order_percent(context.sec,t_close,1,'long'): #多开
+                context.state = 'long'
+                context.holding = True
         elif t_close < 0.98 * y_close:
-            broker.order_percent(context.sec,t_close,1,'short') #空开
-            context.state = 'short'
+            if broker.order_percent(context.sec,t_close,1,'short'): #空开
+                context.state = 'short'
+                context.holding = True
     elif context.holding or now >= context.end: 
         if t_close < 0.98 * y_close and context.state = 'long':
-            broker.order_percent(context.sec,t_close,-1,'long') #多平  
+            if broker.order_percent(context.sec,t_close,-1,'long'): #多平
+                context.state = None
+                context.holding = False
         if t_close > 1.02 * y_close and context.state = 'short':
-            broker.order_percent(context.sec,t_close,-1,'short') #空平  
+            if broker.order_percent(context.sec,t_close,-1,'short'): #空平
+                context.state = None
+                context.holding = False
 ```
 * <font size=3> 可参考策略demo.ipynb[]</font>    
 
