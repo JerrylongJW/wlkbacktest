@@ -102,3 +102,10 @@ strategy.show_trade_information() #展示开平仓点位
 ```
 ---
 
+### Broker.py
+* <font size=3> 交易账户类：提供下单函数功能；记录每日所有标的持仓量、持仓成本、市值信息；记录历史每笔成交记录；未平仓记录  </font>  
+* <font size=3>   </font>  
+* <font size=3> datahandler提供的数据格式为pandas.Panel，该数据结构类似dict，key为标的名称，value为一个pandas.DataFrame</font>  
+* **默认本地数据文件用csv保存，文件名即为证券代码名，如600010.sh.csv,300003.sz.csv,zz500.csv**  
+* **默认csv文件内容：列名：date,open,high,low,close,volume,amount。第二行起为数据内容**  
+* **默认本地数据文件存储路径为 D:/Data/Daily/xxxx.csv , D:/Data/Minute/X（数字）/xxxx.csv; 日度、分钟数据分开存储**   
