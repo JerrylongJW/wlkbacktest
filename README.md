@@ -7,7 +7,8 @@
 * <font size=3> 用户需定义init, algo两个函数，来初始化策略的环境配置和具体的算法逻辑。</font>    
 * <font size=3> init函数中的context参数为Context类对象，用户添加context对象的属性值，来初始化策略的基本信息。例如初始资金、订阅标的名、滑点设置。</font>       
 * <font size=3> algo函数为策略的算法逻辑，data为订阅标的的历史交易数据，broker为账户对象，可完成下单，标的持仓等事宜，context与init中的为同一对象。</font>      
-* <font size=3> 策略若采用N分钟数据，则每N分钟调用一次algo函数，执行交易逻辑。若采用日数据，则每日调用。</font>     
+* <font size=3> 策略若采用N分钟数据，则每N分钟调用一次algo函数，执行交易逻辑。若采用日数据，则每日调用。</font>   
+* <font size=3> 简单范例： </font>   
 
 ```python
 # 策略环境设置函数
@@ -19,15 +20,31 @@ def init(context,**kwargs):
     context.slippage = 0.2                 # 交易滑点
     context.commision = 0.02               # 万二
     context.securities = ['zz500']         # 订阅标的
+    
+    context.holding = False #是否持有
+    context.state = None #多空状态
 
 # 策略交易逻辑函数
 def algo(data,broker,context):
     df = data[context.sec] #获取中证500标的数据
-    now = broker.now
+    now = broker.now #当前bar期
+    
+    t_close = df['close'][-1] #最新收盘价
+    y_close = df['close'][-2] #上跟bar的收盘价
     #策略逻辑
     
-    if df.at[now,'close'] < df['close'].ix[-10:].mean():
-        broker.order_percent(context.sec,1,'long')
+    if not context.holding:
+        if t_close > 1.02 * y_close:
+            broker.order_percent(context.sec,t_close,1,'long') #多开
+            context.state = 'long'
+        elif t_close < 0.98 * y_close:
+            broker.order_percent(context.sec,t_close,1,'short') #空开
+            context.state = 'short'
+    elif context.holding or now >= context.end: 
+        if t_close < 0.98 * y_close and context.state = 'long':
+            broker.order_percent(context.sec,t_close,-1,'long') #多平  
+        if t_close > 1.02 * y_close and context.state = 'short':
+            broker.order_percent(context.sec,t_close,-1,'short') #空平  
 ```
 * <font size=3> 可参考策略demo.ipynb[]</font>    
 
