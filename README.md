@@ -45,11 +45,12 @@ def algo(data,broker,context,**kwargs):
 
 ### datahandler.py
 * <font size=3> 数据获取类，提供策略所需要的标的历史交易数据，供Strategy类对象使用  </font>  
-* <font size=3> 通过context中的 securities，start，end，minute 4个属性值，从本地获取策略所需要的交易数据  </font>
+* <font size=3> 通过context中的 securities，start，end，minute 4个属性值，从本地获取策略所需要的交易数据  </font>  
+* <font size=3> datahandler提供的数据格式为pandas.Panel，该数据结构类似dict，key为标的名称，value为一个pandas.DataFrame</font>  
 * **默认本地数据文件用csv保存，文件名即为证券代码名，如600010.sh.csv,300003.sz.csv,zz500.csv**  
 * **默认csv文件内容：列名：date,open,high,low,close,volume,amount。第二行起为数据内容**  
-* **默认本地数据文件存储路径为 ./Data/Daily/xxxx.csv ./Data/Minute/X（数字）/xxxx.csv;日数据、分钟数据分开存储**   
-* <font size=3> datahandler提供的数据格式为pandas.Panel，该数据结构类似dict，key为标的名称，value为一个pandas.DataFrame</font>  
+* **默认本地数据文件存储路径为 D:/Data/Daily/xxxx.csv , D:/Data/Minute/X（数字）/xxxx.csv; 日度、分钟数据分开存储**   
+
 
 
 ---
